@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='ComponentBase',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('_poly_ct', models.ForeignKey(related_name='+', editable=False, to='contenttypes.ContentType')),
+                ('_poly_ct', models.ForeignKey(related_name='+', editable=False, to='contenttypes.ContentType', on_delete=models.CASCADE)),
             ],
             options={
                 'abstract': False,
@@ -33,7 +33,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=50)),
                 ('slug', models.SlugField(unique=True)),
-                ('parent', models.ForeignKey(blank=True, to='self', help_text='Select a layout which shall be extended by this layout according to region extend rules.', null=True)),
+                ('parent', models.ForeignKey(blank=True, to='self', on_delete=models.CASCADE,
+                                             help_text='Select a layout which shall be extended by this layout according to region extend rules.', null=True)),
             ],
             options={
                 'abstract': False,

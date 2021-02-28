@@ -1,9 +1,14 @@
-from UserList import UserList
+try: #htr py3 difference
+    from collections import UserList
+except ImportError: #py2
+    from UserList import UserList
+
 from django.views.generic import View
 from django.views.generic.detail import BaseDetailView
 from django_mc.mixins import TemplateHintProvider
 from django_mc.models import Region, Layout as _Layout
-from django.db.models.loading import get_model
+from django.apps import apps
+# htr this is deprecated since dj > 1.7 ?from django.db.models.loading import get_model
 from .settings import MC_LAYOUT_MODEL
 
 
@@ -50,7 +55,7 @@ class LayoutMixin(object):
             def get_layout(self):
                 return self.object.layout
         '''
-        Layout = get_model(*MC_LAYOUT_MODEL.split('.'))
+        Layout = apps.get_model(*MC_LAYOUT_MODEL.split('.'))  # htr added apps. as we changed due to DJ cahnges
         layout_slug = self.layout_slug
         if layout_slug is None:
             layout_slug = Layout.DEFAULT_LAYOUT_SLUG
@@ -114,7 +119,7 @@ class LayoutMixin(object):
 
         components_by_region = {}
         for component_provider in self.get_component_providers():
-            for region_id, region_components in component_provider.get_components_by_region().iteritems():
+            for region_id, region_components in component_provider.get_components_by_region().items():
                 components_by_region[region_id] = regions_by_id[region_id].extend_components(
                     components_by_region.get(region_id, []),
                     region_components,
@@ -128,7 +133,7 @@ class LayoutMixin(object):
                 ]),
             )
             for region_id, components
-            in components_by_region.iteritems()
+            in components_by_region.items()
         ])
 
     def get_context_data(self, **kwargs):

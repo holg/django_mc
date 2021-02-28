@@ -7,6 +7,7 @@ when converted to a string.
 
 from django.core.validators import RegexValidator
 from django.db import models
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from .registry import ResolveError
@@ -100,7 +101,8 @@ class LinkField(models.CharField):
     absolute url.
     '''
 
-    __metaclass__ = models.SubfieldBase
+    if settings.DJANGO_MAJOR_VERSION < 2:
+        __metaclass__ = models.SubfieldBase
 
     default_error_messages = models.CharField.default_error_messages.copy()
     default_error_messages['invalid'] = _(
@@ -134,6 +136,18 @@ class LinkField(models.CharField):
             return Link(value)
         except ValueError:
             return value
+
+    if settings.DJANGO_MAJOR_VERSION > 2:
+        def from_db_value(self, value, expression, connection, context):
+
+            if not value:
+                return super(LinkField, self).to_python(value)
+            if isinstance(value, Link):
+                return value
+            try:
+                return Link(value)
+            except ValueError:
+                return value
 
     def get_prep_value(self, value):
         if isinstance(value, Link):

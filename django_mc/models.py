@@ -145,8 +145,8 @@ class RegionComponentProvider(models.Model):
         return regions
 
     class RegionComponentBase(models.Model):
-        region = models.ForeignKey('django_mc.Region', related_name='+')
-        component = models.ForeignKey(MC_COMPONENT_BASE_MODEL, related_name='+')
+        region = models.ForeignKey('django_mc.Region', related_name='+', on_delete = models.CASCADE)
+        component = models.ForeignKey(MC_COMPONENT_BASE_MODEL, related_name='+', on_delete = models.CASCADE)
         position = models.IntegerField(default=0)
 
         # The field ``provider`` will be dynamically defined in the created
@@ -232,7 +232,7 @@ class RegionComponentProvider(models.Model):
             'Meta': meta,
             '__module__': sender.__module__,
             'provider': models.ForeignKey(
-                sender,
+                sender, on_delete = models.CASCADE,
                 related_name='region_components'),
         })
 
@@ -253,7 +253,7 @@ class LayoutMixin(TemplateHintProvider, RegionComponentProvider, models.Model):
 
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True)
-    parent = models.ForeignKey('self', null=True, blank=True,
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete = models.CASCADE,
         help_text=_(
             'Select a layout which shall be extended by this layout according to region '
             'extend rules.'))

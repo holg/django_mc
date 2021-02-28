@@ -1,5 +1,5 @@
 from django.template import Context, Template
-
+from django.conf import settings
 
 __all__ = ('TemplateHintProvider', 'CompositeTemplateHintProvider',
            'TemplateNameProvider', 'Renderable',)
@@ -153,6 +153,7 @@ class TemplateNameProvider(object):
         context.update(kwargs)
         template = Template(template_name)
         return template.render(Context(context))
+
 
     def get_template_names(self, hint_providers, **kwargs):
         '''

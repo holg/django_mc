@@ -8,7 +8,7 @@ from ..registry import registry, ResolveError
 register = template.Library()
 
 
-@register.assignment_tag
+@register.simple_tag # htr assignment tag was removed in DJ1.9
 def resolve_link(reference):
     match = LINK_REFERENCE_REGEX.match(reference)
     if not match:

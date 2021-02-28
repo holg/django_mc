@@ -18,9 +18,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('position', models.IntegerField(default=0)),
-                ('component', models.ForeignKey(related_name='+', to=settings.MC_COMPONENT_BASE_MODEL)),
-                ('provider', models.ForeignKey(related_name='region_components', to=settings.MC_LAYOUT_MODEL)),
-                ('region', models.ForeignKey(related_name='+', to='django_mc.Region')),
+                ('component', models.ForeignKey(related_name='+', to=settings.MC_COMPONENT_BASE_MODEL, on_delete=models.CASCADE)),
+                ('provider', models.ForeignKey(related_name='region_components', to=settings.MC_LAYOUT_MODEL, on_delete=models.CASCADE)),
+                ('region', models.ForeignKey(related_name='+', to='django_mc.Region', on_delete=models.CASCADE)),
             ],
             options={
                 'db_table': 'django_mc_layout_regioncomponent',

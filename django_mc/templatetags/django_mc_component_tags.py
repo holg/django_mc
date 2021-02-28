@@ -2,7 +2,7 @@ from django import template
 from django.template import Variable, TemplateSyntaxError
 from django.template.loader import render_to_string
 from ..mixins import CompositeTemplateHintProvider
-
+from django.conf import settings
 
 register = template.Library()
 
@@ -70,7 +70,10 @@ class RenderComponentNode(template.Node):
         ))
         context.update(component_context)
         try:
-            return render_to_string(template_names, context)
+            if settings.DJANGO_MAJOR_VERSION >= 2:  # TODO we shall fix wrong / outdatet context before 
+                return render_to_string(template_names, context.flatten())
+            else:
+                return render_to_string(template_names, context)
         finally:
             context.pop()
 
